@@ -4,12 +4,13 @@ import Wrapper from "../components/Wrapper"
 import { InputField } from "../components/InputFields"
 import { Button, Box } from "@chakra-ui/core"
 import { useRegisterMutation } from "../generated/graphql"
+import { toErorMap } from "../utils/toErrorMap"
+import { useRouter } from "next/router"
 
-interface rigisterProps {
+interface registerProps {}
 
-}
-
-const Register: React.FC<rigisterProps> = ({}) => {
+const Register: React.FC<registerProps> = ({}) => {
+  const router = useRouter()
   const [, register] = useRegisterMutation()
 
   return (
@@ -18,11 +19,11 @@ const Register: React.FC<rigisterProps> = ({}) => {
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           const res = await register(values)
-          // res.data.rigister?.user?.id
-          if (res.data?.rigister.errors) {
-            setErrors({
-              username: "username error"
-            })
+          // res.data.register?.user?.id
+          if (res.data?.register.errors) {
+            setErrors(toErorMap(res.data.register.errors))
+          } else if (res.data?.register.user) {
+            router.push('/')
           }
         }}
       >

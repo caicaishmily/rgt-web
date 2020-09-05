@@ -46,7 +46,7 @@ export type Mutation = {
   createPost: Post;
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
-  rigister: UserResponse;
+  register: UserResponse;
   login: UserResponse;
 };
 
@@ -67,7 +67,7 @@ export type MutationDeletePostArgs = {
 };
 
 
-export type MutationRigisterArgs = {
+export type MutationRegisterArgs = {
   options: UserInput;
 };
 
@@ -101,7 +101,7 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
-  & { rigister: (
+  & { register: (
     { __typename?: 'UserResponse' }
     & { user?: Maybe<(
       { __typename?: 'User' }
@@ -116,7 +116,7 @@ export type RegisterMutation = (
 
 export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!) {
-  rigister(options: {password: $password, username: $username}) {
+  register(options: {password: $password, username: $username}) {
     user {
       id
       username

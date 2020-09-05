@@ -1,5 +1,5 @@
 mutation Register($username: String!, $password: String!) {
-  rigister(options: { password: $password, username: $username }) {
+  register(options: { password: $password, username: $username }) {
     user {
       id
       username
