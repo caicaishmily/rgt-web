@@ -3,36 +3,27 @@ import { Formik, Form } from "formik"
 import Wrapper from "../components/Wrapper"
 import { InputField } from "../components/InputFields"
 import { Button, Box } from "@chakra-ui/core"
-import { useMutation } from "urql"
+import { useRegisterMutation } from "../generated/graphql"
 
 interface rigisterProps {
 
 }
 
-const REGISTER_MUT = `
-  mutation($username: String!, $password: String!) {
-    rigister(options: { password: $password, username: $username }) {
-      user {
-        id
-        username
-      }
-      errors {
-        field
-        message
-      }
-    }
-  }
-`
-
 const Register: React.FC<rigisterProps> = ({}) => {
-  const [, register] = useMutation(REGISTER_MUT)
+  const [, register] = useRegisterMutation()
 
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{ username: "", password: "" }}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { setErrors }) => {
           const res = await register(values)
+          // res.data.rigister?.user?.id
+          if (res.data?.rigister.errors) {
+            setErrors({
+              username: "username error"
+            })
+          }
         }}
       >
         {({isSubmitting}) => (
