@@ -39,6 +39,7 @@ export type User = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   username: Scalars['String'];
+  email: Scalars['String'];
 };
 
 export type Mutation = {
@@ -46,6 +47,7 @@ export type Mutation = {
   createPost: Post;
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
+  forgotPassword: Scalars['Boolean'];
   logout: Scalars['Boolean'];
   register: UserResponse;
   login: UserResponse;
@@ -74,7 +76,8 @@ export type MutationRegisterArgs = {
 
 
 export type MutationLoginArgs = {
-  options: UserInput;
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -91,6 +94,7 @@ export type FieldError = {
 
 export type UserInput = {
   username: Scalars['String'];
+  email: Scalars['String'];
   password: Scalars['String'];
 };
 
@@ -100,7 +104,8 @@ export type RegularUserFragment = (
 );
 
 export type LoginMutationVariables = Exact<{
-  options: UserInput;
+  usernameOrEmail: Scalars['String'];
+  password: Scalars['String'];
 }>;
 
 
@@ -127,8 +132,7 @@ export type LogoutMutation = (
 );
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
+  options: UserInput;
 }>;
 
 
@@ -175,8 +179,8 @@ export const RegularUserFragmentDoc = gql`
 }
     `;
 export const LoginDocument = gql`
-    mutation Login($options: UserInput!) {
-  login(options: $options) {
+    mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
     errors {
       field
       message
@@ -201,8 +205,8 @@ export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!) {
-  register(options: {password: $password, username: $username}) {
+    mutation Register($options: UserInput!) {
+  register(options: $options) {
     user {
       ...RegularUser
     }
