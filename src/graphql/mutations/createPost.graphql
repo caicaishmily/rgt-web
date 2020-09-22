@@ -1,5 +1,5 @@
-query Posts {
-  posts {
+mutation CreatePost($input: PostInput!) {
+  createPost(input: $input) {
     id
     creatorId
     createdAt
