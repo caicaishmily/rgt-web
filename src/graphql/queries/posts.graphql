@@ -1,5 +1,5 @@
-query Posts {
-  posts {
+query Posts ($cursor: String, $limit: Int!) {
+   posts(limit: $limit, cursor: $cursor) {
     id
     creatorId
     createdAt
