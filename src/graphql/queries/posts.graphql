@@ -6,6 +6,7 @@ query Posts ($cursor: String, $limit: Int!) {
     updatedAt
     title
     text
+    textSnippet
     points
   }
 }
