@@ -8,6 +8,10 @@ query Posts($cursor: String, $limit: Int!) {
       title
       text
       textSnippet
+      creator {
+        id
+        username
+      }
       points
     }
     hasMore

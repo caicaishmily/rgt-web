@@ -4,24 +4,23 @@ import React from "react";
 import { Layout } from "../components/Layout";
 import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import NextLink from "next/link"
+import NextLink from "next/link";
 import { useState } from "react";
 
 const Index = () => {
   const [variables, setVariables] = useState({
-    limit: 99,
-    cursor: null as null | string
-  })
-  
-  console.log(variables)
+    limit: 15,
+    cursor: null as null | string,
+  });
+
+  console.log(variables);
 
   const [{ data, fetching }] = usePostsQuery({
-    variables
-  })
+    variables,
+  });
 
-
-  if(!data && !fetching) {
-    return <div>You got some query error for some reason</div>
+  if (!data && !fetching) {
+    return <div>You got some query error for some reason</div>;
   }
 
   return (
@@ -37,33 +36,33 @@ const Index = () => {
         <div>Loading...</div>
       ) : (
         <Stack>
-          { data!.posts.posts.map((p) => (
+          {data!.posts.posts.map((p) => (
             <Box key={p.id} p={5} shadow="md" borderWidth="1px">
-              <Heading fontSize="xl">{p.title}</Heading>
+              <Heading fontSize="xl">{p.title}</Heading>{" "}
+              <Text>posted by {p.creator.username}</Text>
               <Text mt={4}>{p.textSnippet}</Text>
             </Box>
           ))}
-
         </Stack>
       )}
-      
-      {
-        data && data.posts.hasMore ? (
-          <Flex>
-            <Button 
-              onClick={() => {
-                setVariables({
-                  limit: variables.limit,
-                  cursor: data.posts.posts[data.posts.posts.length - 1].createdAt
-                })
-              }}
-              isLoading={fetching} 
-              m="auto" 
-              my={8}
-            >load more</Button>
-          </Flex>
-        ) : null
-      }
+
+      {data && data.posts.hasMore ? (
+        <Flex>
+          <Button
+            onClick={() => {
+              setVariables({
+                limit: variables.limit,
+                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
+              });
+            }}
+            isLoading={fetching}
+            m="auto"
+            my={8}
+          >
+            load more
+          </Button>
+        </Flex>
+      ) : null}
     </Layout>
   );
 };
