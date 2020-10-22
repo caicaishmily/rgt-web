@@ -1,5 +1,14 @@
 query Post($id: Int!) {
   post(id: $id) {
-    ...PostSnippet
+    id
+    createdAt
+    updatedAt
+    title
+    text
+    voteStatus
+    creator {
+      id
+      username
+    }
   }
 }
