@@ -1,12 +1,20 @@
-import { Box, Button, Flex, Heading, IconButton, Link, Stack, Text } from "@chakra-ui/core";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+  Text
+} from "@chakra-ui/core";
 import { withUrqlClient } from "next-urql";
-import React from "react";
-import { Layout } from "../components/Layout";
-import { useDeletePostMutation, usePostsQuery } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 import NextLink from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
+import { EditDeletePostBtns } from "../components/EditDeletePostBtns";
+import { Layout } from "../components/Layout";
 import UpdootSection from "../components/UpdootSection";
+import { usePostsQuery } from "../generated/graphql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -18,8 +26,6 @@ const Index = () => {
     variables,
   });
 
-  const [, deletePost] = useDeletePostMutation()
-
   if (!data && !fetching) {
     return <div>You got some query error for some reason</div>;
   }
@@ -30,31 +36,27 @@ const Index = () => {
         <div>Loading...</div>
       ) : (
         <Stack>
-          {data!.posts.posts.map((p) => !p ? null : (
-            <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
-              <UpdootSection post={p} />
-              <Box flex={1}>
-                <NextLink href='/post/[id]' as={`/post/${p.id}`}>
-                  <Link>
-                    <Heading fontSize="xl">{p.title}</Heading>
-                  </Link>
-                </NextLink>
-                <Text>posted by {p.creator.username}</Text>
-                <Flex align="center">
-                  <Text mt={4}>{p.textSnippet}</Text>
-                  <IconButton 
-                    ml="auto"
-                    icon='delete' 
-                    aria-label="Delete post"
-                    variantColor="red" 
-                    onClick={() => {
-                      deletePost({ id: p.id })
-                    }}
-                  />
-                </Flex>
-              </Box>
-            </Flex>
-          ))}
+          {data!.posts.posts.map((p) =>
+            !p ? null : (
+              <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
+                <UpdootSection post={p} />
+                <Box flex={1}>
+                  <NextLink href="/post/[id]" as={`/post/${p.id}`}>
+                    <Link>
+                      <Heading fontSize="xl">{p.title}</Heading>
+                    </Link>
+                  </NextLink>
+                  <Text>posted by {p.creator.username}</Text>
+                  <Flex align="center" justifyContent="space-between">
+                    <Text mt={4}>{p.textSnippet}</Text>
+                    <Box>
+                      <EditDeletePostBtns id={p.id} creatorId={p.creator.id} />
+                    </Box>
+                  </Flex>
+                </Box>
+              </Flex>
+            )
+          )}
         </Stack>
       )}
 
